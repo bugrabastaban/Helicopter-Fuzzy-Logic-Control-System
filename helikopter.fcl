@@ -1,0 +1,74 @@
+FUNCTION_BLOCK Helikopter
+
+VAR_INPUT
+    Agirlik : REAL;
+    RotorHizi : REAL;
+    GKuvvet : REAL;
+END_VAR
+
+VAR_OUTPUT
+    HavadaKalma : REAL;
+END_VAR
+
+FUZZIFY Agirlik
+    TERM Dusuk := (600, 1) (1500, 0);
+    TERM Orta  := (1000, 0) (3000, 1) (6000, 0);
+    TERM Yuksek := (5000, 0) (11000, 1);
+END_FUZZIFY
+
+FUZZIFY RotorHizi
+    TERM Dusuk := (360, 1) (390, 0);
+    TERM Orta  := (385, 0) (395, 1) (400, 0);
+    TERM Yuksek := (395, 0) (410, 1);
+END_FUZZIFY
+
+FUZZIFY GKuvvet
+    TERM Dusuk := (-1, 1) (0, 0);
+    TERM Orta  := (0, 0) (1, 1) (2, 0);
+    TERM Yuksek := (2, 0) (4, 1);
+END_FUZZIFY
+
+DEFUZZIFY HavadaKalma
+    TERM Basarisiz := (0,1) (25,0);
+    TERM Kararsiz  := (25,0) (50,1) (75,0);
+    TERM Basarili := (50,0) (100,1);
+    METHOD : LM;
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK Kurallar
+    AND : MIN;
+    ACT : MIN;
+    ACCU : MAX;
+
+    RULE 1 : IF Agirlik IS Dusuk AND RotorHizi IS Dusuk AND GKuvvet IS Dusuk THEN HavadaKalma IS Kararsiz;
+    RULE 2 : IF Agirlik IS Dusuk AND RotorHizi IS Dusuk AND GKuvvet IS Orta THEN HavadaKalma IS Kararsiz;
+    RULE 3 : IF Agirlik IS Dusuk AND RotorHizi IS Dusuk AND GKuvvet IS Yuksek THEN HavadaKalma IS Basarisiz;
+    RULE 4 : IF Agirlik IS Dusuk AND RotorHizi IS Orta AND GKuvvet IS Dusuk THEN HavadaKalma IS Basarili;
+    RULE 5 : IF Agirlik IS Dusuk AND RotorHizi IS Orta AND GKuvvet IS Orta THEN HavadaKalma IS Basarili;
+    RULE 6 : IF Agirlik IS Dusuk AND RotorHizi IS Orta AND GKuvvet IS Yuksek THEN HavadaKalma IS Kararsiz;
+    RULE 7 : IF Agirlik IS Dusuk AND RotorHizi IS Yuksek AND GKuvvet IS Dusuk THEN HavadaKalma IS Basarili;
+    RULE 8 : IF Agirlik IS Dusuk AND RotorHizi IS Yuksek AND GKuvvet IS Orta THEN HavadaKalma IS Basarili;
+    RULE 9 : IF Agirlik IS Dusuk AND RotorHizi IS Yuksek AND GKuvvet IS Yuksek THEN HavadaKalma IS Kararsiz;
+    RULE 10 : IF Agirlik IS Orta AND RotorHizi IS Dusuk AND GKuvvet IS Dusuk THEN HavadaKalma IS Kararsiz;
+    RULE 11 : IF Agirlik IS Orta AND RotorHizi IS Dusuk AND GKuvvet IS Orta THEN HavadaKalma IS Basarisiz;
+    RULE 12 : IF Agirlik IS Orta AND RotorHizi IS Dusuk AND GKuvvet IS Yuksek THEN HavadaKalma IS Basarisiz;
+    RULE 13 : IF Agirlik IS Orta AND RotorHizi IS Orta AND GKuvvet IS Dusuk THEN HavadaKalma IS Basarili;
+    RULE 14 : IF Agirlik IS Orta AND RotorHizi IS Orta AND GKuvvet IS Orta THEN HavadaKalma IS Kararsiz;
+    RULE 15 : IF Agirlik IS Orta AND RotorHizi IS Orta AND GKuvvet IS Yuksek THEN HavadaKalma IS Basarisiz;
+    RULE 16 : IF Agirlik IS Orta AND RotorHizi IS Yuksek AND GKuvvet IS Dusuk THEN HavadaKalma IS Basarili;
+    RULE 17 : IF Agirlik IS Orta AND RotorHizi IS Yuksek AND GKuvvet IS Orta THEN HavadaKalma IS Kararsiz;
+    RULE 18 : IF Agirlik IS Orta AND RotorHizi IS Yuksek AND GKuvvet IS Yuksek THEN HavadaKalma IS Basarisiz;
+    RULE 19 : IF Agirlik IS Yuksek AND RotorHizi IS Dusuk AND GKuvvet IS Dusuk THEN HavadaKalma IS Kararsiz;
+    RULE 20 : IF Agirlik IS Yuksek AND RotorHizi IS Dusuk AND GKuvvet IS Orta THEN HavadaKalma IS Basarisiz;
+    RULE 21 : IF Agirlik IS Yuksek AND RotorHizi IS Dusuk AND GKuvvet IS Yuksek THEN HavadaKalma IS Basarisiz;
+    RULE 22 : IF Agirlik IS Yuksek AND RotorHizi IS Orta AND GKuvvet IS Dusuk THEN HavadaKalma IS Kararsiz;
+    RULE 23 : IF Agirlik IS Yuksek AND RotorHizi IS Orta AND GKuvvet IS Orta THEN HavadaKalma IS Basarisiz;
+    RULE 24 : IF Agirlik IS Yuksek AND RotorHizi IS Orta AND GKuvvet IS Yuksek THEN HavadaKalma IS Basarisiz;
+    RULE 25 : IF Agirlik IS Yuksek AND RotorHizi IS Yuksek AND GKuvvet IS Dusuk THEN HavadaKalma IS Kararsiz;
+    RULE 26 : IF Agirlik IS Yuksek AND RotorHizi IS Yuksek AND GKuvvet IS Orta THEN HavadaKalma IS Kararsiz;
+    RULE 27 : IF Agirlik IS Yuksek AND RotorHizi IS Yuksek AND GKuvvet IS Yuksek THEN HavadaKalma IS Basarisiz;
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
